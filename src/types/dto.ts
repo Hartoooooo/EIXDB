@@ -1,0 +1,45 @@
+/**
+ * Data Transfer Objects – spiegeln exakt die .NET/C# DTOs auf der Backend-Seite.
+ * Änderungen hier müssen synchron mit dem Backend abgestimmt werden.
+ */
+
+export type AssetCategory = 'gold' | 'silver' | 'crypto' | 'platinum' | 'eth' | 'oil'
+
+export interface MarketTicker {
+  symbol: string
+  displayName: string
+  price: number
+  changePct: number
+  time: string // ISO 8601
+}
+
+export interface ChartPoint {
+  time: string // ISO 8601 oder epoch string
+  value: number
+}
+
+export interface PositionAggregate {
+  category: AssetCategory
+  longPct: number
+  shortPct: number
+  longEur: number
+  shortEur: number
+}
+
+export interface Trade {
+  id: string
+  category: AssetCategory
+  timestamp: string // ISO 8601
+  symbol: string
+  side: 'long' | 'short'
+  quantity: number
+  positionLabel: string
+  last: number
+  changePct: number
+}
+
+export interface PanelTableRow {
+  label: string
+  vol: string
+  chgPct?: number
+}
