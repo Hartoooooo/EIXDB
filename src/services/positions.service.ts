@@ -2,7 +2,7 @@
  * PositionsService – Interface + Mock-Implementierung.
  *
  * Für die Backend-Integration: getPositionAggregates() durch
- * HTTP-Call gegen /api/positions/aggregates?location=...&exchange=... ersetzen.
+ * HTTP-Call gegen /api/positions/aggregates?location=...&subBasket=... ersetzen.
  */
 
 import type { PositionAggregate, FilterParams } from '@/types/dto'
@@ -19,7 +19,7 @@ function delay(ms = 400): Promise<void> {
 class MockPositionsService implements IPositionsService {
   async getPositionAggregates(filter: FilterParams): Promise<PositionAggregate[]> {
     await delay(350)
-    const key = `${filter.location}|${filter.exchange}`
+    const key = `${filter.location}|${filter.subBasket}`
     return [...(mockPositionsByFilter[key] ?? mockPositionsByFilter['ALL|EIX'])]
   }
 }

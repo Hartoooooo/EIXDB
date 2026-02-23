@@ -417,7 +417,7 @@ const tradesStore = useTradesStore()
 const { aggregates: positionAggregates } = storeToRefs(positionsStore)
 
 const isRefreshing = ref(false)
-const activeFilter = ref<FilterParams>({ location: 'ALL', exchange: 'EIX' })
+const activeFilter = ref<FilterParams>({ location: 'ALL', subBasket: 'EIX' })
 const cardsPage = ref(0)
 const positionsPage = ref(0)
 const tradesPage = ref(0)

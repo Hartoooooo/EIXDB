@@ -4,7 +4,7 @@ import type { Trade, FilterParams } from '@/types/dto'
 import type { AssetCategory } from '@/types/dto'
 import { tradesService } from '@/services/trades.service'
 
-const DEFAULT_FILTER: FilterParams = { location: 'ALL', exchange: 'EIX' }
+const DEFAULT_FILTER: FilterParams = { location: 'ALL', subBasket: 'EIX' }
 
 export const useTradesStore = defineStore('trades', () => {
   const trades = ref<Record<AssetCategory, Trade[]>>({

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import type { PositionAggregate, FilterParams } from '@/types/dto'
 import { positionsService } from '@/services/positions.service'
 
-const DEFAULT_FILTER: FilterParams = { location: 'ALL', exchange: 'EIX' }
+const DEFAULT_FILTER: FilterParams = { location: 'ALL', subBasket: 'EIX' }
 
 export const usePositionsStore = defineStore('positions', () => {
   const aggregates = ref<PositionAggregate[]>([])

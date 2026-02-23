@@ -4,7 +4,7 @@ import type { MarketTicker, ChartPoint, PanelTableRow, FilterParams } from '@/ty
 import type { AssetCategory } from '@/types/dto'
 import { marketService } from '@/services/market.service'
 
-const DEFAULT_FILTER: FilterParams = { location: 'ALL', exchange: 'EIX' }
+const DEFAULT_FILTER: FilterParams = { location: 'ALL', subBasket: 'EIX' }
 
 export const useMarketStore = defineStore('market', () => {
   const tickers = ref<MarketTicker[]>([])

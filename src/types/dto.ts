@@ -6,12 +6,12 @@
 export type AssetCategory = 'gold' | 'silver' | 'crypto' | 'platinum' | 'eth' | 'oil'
 
 export type LocationFilter = 'ALL' | 'BER' | 'MUN'
-export type ExchangeFilter = 'EIX' | 'HAM'
+export type SubBasketFilter = 'EIX' | 'HAM'
 export type BasketCode = 'B' | 'M'
 
 export interface FilterParams {
   location: LocationFilter
-  exchange: ExchangeFilter
+  subBasket: SubBasketFilter
 }
 
 export interface MarketTicker {
@@ -34,7 +34,7 @@ export interface PositionAggregate {
   longEur: number
   shortEur: number
   basket: BasketCode
-  exchange: ExchangeFilter
+  subBasket: SubBasketFilter
 }
 
 export interface Trade {
@@ -48,7 +48,7 @@ export interface Trade {
   last: number
   changePct: number
   basket: BasketCode
-  exchange: ExchangeFilter
+  subBasket: SubBasketFilter
 }
 
 export interface PanelTableRow {

@@ -19,18 +19,18 @@
 
       <span class="text-border">/</span>
 
-      <!-- Exchange Selector: EIX / HAM -->
+      <!-- Sub-Basket Selector: EIX / HAM -->
       <div class="flex items-center rounded-lg bg-surface2 border border-border p-0.5">
         <button
-          v-for="ex in exchanges"
-          :key="ex"
+          v-for="sb in subBaskets"
+          :key="sb"
           class="px-3 py-1 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-150"
-          :class="selectedExchange === ex
+          :class="selectedSubBasket === sb
             ? 'bg-border text-text-primary'
             : 'text-text-secondary hover:text-text-primary'"
-          @click="selectedExchange = ex"
+          @click="selectedSubBasket = sb"
         >
-          {{ ex }}
+          {{ sb }}
         </button>
       </div>
     </div>
@@ -118,7 +118,7 @@ import { storeToRefs } from 'pinia'
 import { usePositionsStore } from '@/stores/positions.store'
 import { useThemeStore } from '@/stores/theme.store'
 import { formatCurrencyEUR } from '@/utils/format'
-import type { FilterParams, LocationFilter, ExchangeFilter } from '@/types/dto'
+import type { FilterParams, LocationFilter, SubBasketFilter } from '@/types/dto'
 
 const themeStore = useThemeStore()
 const { isDark } = storeToRefs(themeStore)
@@ -129,18 +129,18 @@ const emit = defineEmits<{
   filterChange: [filter: FilterParams]
 }>()
 
-const exchanges = ['EIX', 'HAM'] as const
-const selectedExchange = ref<ExchangeFilter>('EIX')
+const subBaskets = ['EIX', 'HAM'] as const
+const selectedSubBasket = ref<SubBasketFilter>('EIX')
 
 const locations = ['ALL', 'BER', 'MUN'] as const
 const selectedLocation = ref<LocationFilter>('ALL')
 
 function emitFilter() {
-  emit('filterChange', { location: selectedLocation.value, exchange: selectedExchange.value })
+  emit('filterChange', { location: selectedLocation.value, subBasket: selectedSubBasket.value })
 }
 
 watch(selectedLocation, emitFilter)
-watch(selectedExchange, emitFilter)
+watch(selectedSubBasket, emitFilter)
 
 const positionsStore = usePositionsStore()
 const { aggregates } = storeToRefs(positionsStore)

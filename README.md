@@ -38,7 +38,7 @@ src/
 ├── mocks/
 │   ├── mock.market.ts          # Mock Tickers, Charts, Panel-Tabellen
 │   ├── mock.positions.ts       # Mock Positions-Aggregate (je Filter-Kombination)
-│   └── mock.trades.ts          # Mock Trade-Liste mit basket + exchange pro Trade
+│   └── mock.trades.ts          # Mock Trade-Liste mit basket + subBasket pro Trade
 │
 ├── pages/
 │   └── Dashboard.vue           # Haupt-Seite — orchestriert alle Stores + Filter
@@ -111,10 +111,10 @@ SELECT *
 FROM trades
 WHERE status = 'open'
   AND basket   = @basket    -- 'B' (BER) | 'M' (MUN) | beide (ALL)
-  AND exchange = @exchange  -- 'EIX' | 'HAM'
+  AND sub_basket = @subBasket  -- 'EIX' | 'HAM'
 ```
 
-`basket` und `exchange` kommen direkt aus den Header-Filtern des Frontends (siehe `FilterParams`).
+`basket` (B/M) und `subBasket` (EIX/HAM) sind beides Basket-Werte und kommen direkt aus den Header-Filtern des Frontends (siehe `FilterParams`).
 
 ### Schritt 2 — Symbol/ISIN → Kategorie auflösen
 
@@ -187,22 +187,22 @@ foreach (var group in grouped)
 
 ### Schritt 4 — API-Endpoints
 
-Das Frontend erwartet folgende Endpoints. Alle akzeptieren `location` und `exchange` als Query-Parameter:
+Das Frontend erwartet folgende Endpoints. Alle akzeptieren `location` und `subBasket` als Query-Parameter:
 
 ```
-GET /api/positions/aggregates?location=BER&exchange=EIX
+GET /api/positions/aggregates?location=BER&subBasket=EIX
     → PositionAggregate[] (eine Zeile pro Kategorie)
 
-GET /api/trades?category=gold&location=BER&exchange=EIX&limit=5
+GET /api/trades?category=gold&location=BER&subBasket=EIX&limit=5
     → Trade[] (letzte N offene Trades dieser Kategorie)
 
-GET /api/market/tickers?location=BER&exchange=EIX
+GET /api/market/tickers?location=BER&subBasket=EIX
     → MarketTicker[]
 
-GET /api/market/chart/{category}?location=BER&exchange=EIX
+GET /api/market/chart/{category}?location=BER&subBasket=EIX
     → ChartPoint[]
 
-GET /api/market/table/{category}?location=BER&exchange=EIX
+GET /api/market/table/{category}?location=BER&subBasket=EIX
     → PanelTableRow[]
 ```
 
@@ -227,10 +227,10 @@ Der gesamte Datenfluss ist **filter-getrieben**: Wechselt der Nutzer im Header v
 
 Die beiden Filter im Header sind **globale Über-Filter**: Jede Änderung löst einen vollständigen Reload aller Daten aus.
 
-| Filter   | Typ       | Werte          | Wirkung                                  |
-|----------|-----------|----------------|------------------------------------------|
-| Location | `string`  | ALL / BER / MUN | Basket-Filter: alle / B=Berlin / M=München |
-| Exchange | `string`  | EIX / HAM      | Exchange-Filter: EIX oder HAM            |
+| Filter     | Typ       | Werte           | Basket-Wert  | Wirkung                                         |
+|------------|-----------|-----------------|--------------|--------------------------------------------------|
+| Location   | `string`  | ALL / BER / MUN | – / B / M    | Erster Basket-Filter: alle / Berlin / München    |
+| Sub-Basket | `string`  | EIX / HAM       | EIX / HAM    | Zweiter Basket-Filter: innerhalb der Location    |
 
 Beide Filter werden als `FilterParams`-Objekt durch die gesamte App propagiert:
 
@@ -238,7 +238,7 @@ Beide Filter werden als `FilterParams`-Objekt durch die gesamte App propagiert:
 // src/types/dto.ts
 export interface FilterParams {
   location: 'ALL' | 'BER' | 'MUN'
-  exchange: 'EIX' | 'HAM'
+  subBasket: 'EIX' | 'HAM'
 }
 ```
 
@@ -248,7 +248,7 @@ export interface FilterParams {
 User klickt "BER"
     │
     ▼
-HeaderBar emittiert filterChange({ location: 'BER', exchange: 'EIX' })
+HeaderBar emittiert filterChange({ location: 'BER', subBasket: 'EIX' })
     │
     ▼
 Dashboard.handleFilterChange(filter)
@@ -261,7 +261,7 @@ Dashboard.handleFilterChange(filter)
         Services übergeben filter als Query-Params ans Backend
               │
               ▼
-        Backend filtert nach basket='B' AND exchange='EIX'
+        Backend filtert nach basket='B' AND sub_basket='EIX'
               │
               ▼
         Panels rendern die gefilterten Daten
@@ -300,7 +300,7 @@ import { http } from './http.client'
 class HttpTradesService implements ITradesService {
   async getRecentTrades(category: AssetCategory, filter: FilterParams, limit = 5): Promise<Trade[]> {
     const { data } = await http.get<Trade[]>('/api/trades', {
-      params: { category, location: filter.location, exchange: filter.exchange, limit },
+      params: { category, location: filter.location, subBasket: filter.subBasket, limit },
     })
     return data
   }
@@ -316,7 +316,7 @@ import { http } from './http.client'
 class HttpPositionsService implements IPositionsService {
   async getPositionAggregates(filter: FilterParams): Promise<PositionAggregate[]> {
     const { data } = await http.get<PositionAggregate[]>('/api/positions/aggregates', {
-      params: { location: filter.location, exchange: filter.exchange },
+      params: { location: filter.location, subBasket: filter.subBasket },
     })
     return data
   }
@@ -332,19 +332,19 @@ import { http } from './http.client'
 class HttpMarketDataService implements IMarketDataService {
   async getTopTickers(filter: FilterParams): Promise<MarketTicker[]> {
     const { data } = await http.get<MarketTicker[]>('/api/market/tickers', {
-      params: { location: filter.location, exchange: filter.exchange },
+      params: { location: filter.location, subBasket: filter.subBasket },
     })
     return data
   }
   async getCategoryChart(category: AssetCategory, filter: FilterParams): Promise<ChartPoint[]> {
     const { data } = await http.get<ChartPoint[]>(`/api/market/chart/${category}`, {
-      params: { location: filter.location, exchange: filter.exchange },
+      params: { location: filter.location, subBasket: filter.subBasket },
     })
     return data
   }
   async getPanelTable(category: AssetCategory, filter: FilterParams): Promise<PanelTableRow[]> {
     const { data } = await http.get<PanelTableRow[]>(`/api/market/table/${category}`, {
-      params: { location: filter.location, exchange: filter.exchange },
+      params: { location: filter.location, subBasket: filter.subBasket },
     })
     return data
   }
@@ -375,13 +375,13 @@ public record ChartPoint(string Time, decimal Value);
 public record PositionAggregate(
     string Category, decimal LongPct, decimal ShortPct,
     decimal LongEur, decimal ShortEur,
-    string Basket, string Exchange);
+    string Basket, string SubBasket);  // Basket: 'B'|'M', SubBasket: 'EIX'|'HAM'
 
 public record Trade(
     string Id, string Category, string Timestamp,
     string Symbol, string Side, decimal Quantity,
     string PositionLabel, decimal Last, decimal ChangePct,
-    string Basket, string Exchange);
+    string Basket, string SubBasket);  // Basket: 'B'|'M', SubBasket: 'EIX'|'HAM'
 
 public record PanelTableRow(string Label, string Vol, decimal? ChgPct);
 ```
@@ -412,5 +412,5 @@ Aktuell laufen alle Daten über Mock-Services mit künstlicher Verzögerung (300
 um Loading States realitätsnah zu demonstrieren. Die Daten werden bei jedem
 App-Start neu generiert (Chart-Punkte sind leicht randomisiert).
 
-Jeder Mock-Trade hat `basket` (`'B'` oder `'M'`) und `exchange` (`'EIX'` oder `'HAM'`) gesetzt,
-sodass die Header-Filter auch im Mock-Modus funktionieren und sichtbar Daten filtern.
+Jeder Mock-Trade hat `basket` (`'B'` oder `'M'`) und `subBasket` (`'EIX'` oder `'HAM'`) gesetzt —
+beides sind Basket-Werte. Die Header-Filter funktionieren dadurch auch im Mock-Modus vollständig.
