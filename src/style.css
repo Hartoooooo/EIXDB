@@ -6,8 +6,8 @@
 :root,
 [data-theme="dark"] {
   --color-bg: #111111;
-  --color-surface: #181818;
-  --color-surface2: #262626;
+  --color-surface: #262626;
+  --color-surface2: #181818;
   --color-border: #2E2E2E;
   --color-text-primary: #EBEBEB;
   --color-text-secondary: #888888;
