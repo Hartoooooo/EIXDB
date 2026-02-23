@@ -1,5 +1,6 @@
 <template>
-  <header class="sticky top-0 z-50 relative flex items-center justify-between px-6 py-3 bg-surface border-b border-border backdrop-blur-sm">
+  <header class="sticky top-0 z-50 bg-surface border-b border-border backdrop-blur-sm">
+    <div class="relative flex items-center justify-between px-4 md:px-6 py-3 max-w-[1600px] mx-auto">
     <!-- Left: Selektoren -->
     <div class="flex items-center gap-2">
       <!-- Location Selector: ALL / BER / MUN -->
@@ -108,6 +109,7 @@
         REFRESH
       </button>
 
+    </div>
     </div>
   </header>
 </template>
