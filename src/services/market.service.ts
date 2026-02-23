@@ -3,16 +3,17 @@
  *
  * Für die Backend-Integration: Die Methoden hier durch HTTP-Calls
  * gegen /api/market/* ersetzen und Mock-Imports entfernen.
+ * FilterParams wird ans Backend übergeben, sobald es verbunden ist.
  */
 
-import type { MarketTicker, ChartPoint, PanelTableRow } from '@/types/dto'
+import type { MarketTicker, ChartPoint, PanelTableRow, FilterParams } from '@/types/dto'
 import type { AssetCategory } from '@/types/dto'
 import { mockTickers, mockChartData, mockPanelTables } from '@/mocks/mock.market'
 
 export interface IMarketDataService {
-  getTopTickers(): Promise<MarketTicker[]>
-  getCategoryChart(category: AssetCategory): Promise<ChartPoint[]>
-  getPanelTable(category: AssetCategory): Promise<PanelTableRow[]>
+  getTopTickers(filter: FilterParams): Promise<MarketTicker[]>
+  getCategoryChart(category: AssetCategory, filter: FilterParams): Promise<ChartPoint[]>
+  getPanelTable(category: AssetCategory, filter: FilterParams): Promise<PanelTableRow[]>
 }
 
 function delay(ms = 400): Promise<void> {
@@ -20,17 +21,20 @@ function delay(ms = 400): Promise<void> {
 }
 
 class MockMarketDataService implements IMarketDataService {
-  async getTopTickers(): Promise<MarketTicker[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getTopTickers(_filter: FilterParams): Promise<MarketTicker[]> {
     await delay(300)
     return [...mockTickers]
   }
 
-  async getCategoryChart(category: AssetCategory): Promise<ChartPoint[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCategoryChart(category: AssetCategory, _filter: FilterParams): Promise<ChartPoint[]> {
     await delay(400)
     return [...mockChartData[category]]
   }
 
-  async getPanelTable(category: AssetCategory): Promise<PanelTableRow[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getPanelTable(category: AssetCategory, _filter: FilterParams): Promise<PanelTableRow[]> {
     await delay(350)
     return [...mockPanelTables[category]]
   }

@@ -118,6 +118,7 @@ import { storeToRefs } from 'pinia'
 import { usePositionsStore } from '@/stores/positions.store'
 import { useThemeStore } from '@/stores/theme.store'
 import { formatCurrencyEUR } from '@/utils/format'
+import type { FilterParams, LocationFilter, ExchangeFilter } from '@/types/dto'
 
 const themeStore = useThemeStore()
 const { isDark } = storeToRefs(themeStore)
@@ -125,17 +126,21 @@ const { isDark } = storeToRefs(themeStore)
 defineProps<{ refreshing?: boolean }>()
 const emit = defineEmits<{
   refresh: []
-  locationChange: [location: string]
+  filterChange: [filter: FilterParams]
 }>()
 
 const exchanges = ['EIX', 'HAM'] as const
-const selectedExchange = ref<string>('EIX')
+const selectedExchange = ref<ExchangeFilter>('EIX')
 
 const locations = ['ALL', 'BER', 'MUN'] as const
-const selectedLocation = ref<string>('ALL')
+const selectedLocation = ref<LocationFilter>('ALL')
 
-watch(selectedLocation, loc => emit('locationChange', loc))
-watch(selectedExchange, ex => emit('locationChange', ex))
+function emitFilter() {
+  emit('filterChange', { location: selectedLocation.value, exchange: selectedExchange.value })
+}
+
+watch(selectedLocation, emitFilter)
+watch(selectedExchange, emitFilter)
 
 const positionsStore = usePositionsStore()
 const { aggregates } = storeToRefs(positionsStore)

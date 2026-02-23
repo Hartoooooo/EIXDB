@@ -4,7 +4,7 @@
     <HeaderBar
       :refreshing="isRefreshing"
       @refresh="handleRefresh"
-      @location-change="(loc) => selectedLocation = loc"
+      @filter-change="handleFilterChange"
     />
 
     <!-- Main Content -->
@@ -409,6 +409,7 @@ import HeaderBar from '@/components/HeaderBar.vue'
 import CategoryPanel from '@/components/CategoryPanel.vue'
 import PositionsSummary from '@/components/PositionsSummary.vue'
 import RecentTradesList from '@/components/RecentTradesList.vue'
+import type { FilterParams } from '@/types/dto'
 
 const marketStore = useMarketStore()
 const positionsStore = usePositionsStore()
@@ -416,7 +417,7 @@ const tradesStore = useTradesStore()
 const { aggregates: positionAggregates } = storeToRefs(positionsStore)
 
 const isRefreshing = ref(false)
-const selectedLocation = ref('ALL')
+const activeFilter = ref<FilterParams>({ location: 'ALL', exchange: 'EIX' })
 const cardsPage = ref(0)
 const positionsPage = ref(0)
 const tradesPage = ref(0)
@@ -447,17 +448,24 @@ const hasAnyError = computed(() =>
   Object.values(tradesStore.error).some(Boolean)
 )
 
-async function loadAll() {
+async function loadAll(filter: FilterParams = activeFilter.value) {
   await Promise.all([
-    marketStore.fetchAll(),
-    positionsStore.fetchAggregates(),
-    tradesStore.fetchAll(),
+    marketStore.fetchAll(filter),
+    positionsStore.fetchAggregates(filter),
+    tradesStore.fetchAll(filter),
   ])
 }
 
 async function handleRefresh() {
   isRefreshing.value = true
   await loadAll()
+  isRefreshing.value = false
+}
+
+async function handleFilterChange(filter: FilterParams) {
+  activeFilter.value = filter
+  isRefreshing.value = true
+  await loadAll(filter)
   isRefreshing.value = false
 }
 

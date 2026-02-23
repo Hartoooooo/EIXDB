@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Trade } from '@/types/dto'
+import type { Trade, FilterParams } from '@/types/dto'
 import type { AssetCategory } from '@/types/dto'
 import { tradesService } from '@/services/trades.service'
+
+const DEFAULT_FILTER: FilterParams = { location: 'ALL', exchange: 'EIX' }
 
 export const useTradesStore = defineStore('trades', () => {
   const trades = ref<Record<AssetCategory, Trade[]>>({
@@ -15,11 +17,11 @@ export const useTradesStore = defineStore('trades', () => {
     gold: null, silver: null, crypto: null, platinum: null, eth: null, oil: null,
   })
 
-  async function fetchRecentTrades(category: AssetCategory, limit = 5) {
+  async function fetchRecentTrades(category: AssetCategory, filter: FilterParams = DEFAULT_FILTER, limit = 5) {
     loading.value[category] = true
     error.value[category] = null
     try {
-      trades.value[category] = await tradesService.getRecentTrades(category, limit)
+      trades.value[category] = await tradesService.getRecentTrades(category, filter, limit)
     } catch (e) {
       error.value[category] = e instanceof Error ? e.message : 'Fehler beim Laden der Trades'
     } finally {
@@ -27,14 +29,14 @@ export const useTradesStore = defineStore('trades', () => {
     }
   }
 
-  async function fetchAll(limit = 5) {
+  async function fetchAll(filter: FilterParams = DEFAULT_FILTER, limit = 5) {
     await Promise.all([
-      fetchRecentTrades('gold', limit),
-      fetchRecentTrades('silver', limit),
-      fetchRecentTrades('crypto', limit),
-      fetchRecentTrades('platinum', limit),
-      fetchRecentTrades('eth', limit),
-      fetchRecentTrades('oil', limit),
+      fetchRecentTrades('gold',     filter, limit),
+      fetchRecentTrades('silver',   filter, limit),
+      fetchRecentTrades('crypto',   filter, limit),
+      fetchRecentTrades('platinum', filter, limit),
+      fetchRecentTrades('eth',      filter, limit),
+      fetchRecentTrades('oil',      filter, limit),
     ])
   }
 
