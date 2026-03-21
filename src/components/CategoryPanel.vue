@@ -8,12 +8,30 @@
         <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary shrink-0">
           {{ title }}
         </span>
+        <!-- Desktop: G L S in einer Zeile; Mobile: nur G, L/S unter dem Balken -->
         <ExposureLegend
           :long-value="effectiveLongValue"
           :short-value="effectiveShortValue"
+          :show-only-total="false"
+          class="hidden sm:flex"
+        />
+        <ExposureLegend
+          :long-value="effectiveLongValue"
+          :short-value="effectiveShortValue"
+          :show-only-total="true"
+          class="flex sm:hidden"
         />
       </div>
       <LongShortBar :long-pct="effectiveLongPct" />
+      <!-- Mobile: L/S unter den jeweiligen Balkenfarben (L links, S rechts) -->
+      <div class="flex w-full mt-1 text-[9px] font-mono font-bold tabular-nums sm:hidden">
+        <div class="flex justify-start flex-1 min-w-0" :style="{ flex: `${effectiveLongPct} ${effectiveLongPct} 0%` }">
+          <span class="text-positive">{{ longDisplay }}</span>
+        </div>
+        <div class="flex justify-end flex-1 min-w-0" :style="{ flex: `${effectiveShortPct} ${effectiveShortPct} 0%` }">
+          <span class="text-negative">{{ shortDisplay }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Price Block -->
@@ -160,6 +178,9 @@ const effectiveLongPct = computed(() => {
 })
 
 const effectiveShortPct = computed(() => 100 - effectiveLongPct.value)
+
+const longDisplay = computed(() => formatCurrencyEUR(effectiveLongValue.value))
+const shortDisplay = computed(() => formatCurrencyEUR(effectiveShortValue.value))
 
 /** Tabellen-Rows: Live-Top-Positionen haben Vorrang vor statischen Mock-Rows */
 const effectiveTableRows = computed<PanelTableRow[]>(() => {

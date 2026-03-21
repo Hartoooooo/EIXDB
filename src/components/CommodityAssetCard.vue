@@ -36,9 +36,20 @@
         <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary shrink-0 truncate" :title="commodity.name">
           {{ commodity.shortName ?? commodity.name }}
         </span>
-        <ExposureLegend :long-value="totalLong" :short-value="totalShort" />
+        <!-- Desktop: G L S in einer Zeile; Mobile: nur G, L/S unter dem Balken -->
+        <ExposureLegend :long-value="totalLong" :short-value="totalShort" :show-only-total="false" class="hidden sm:flex" />
+        <ExposureLegend :long-value="totalLong" :short-value="totalShort" :show-only-total="true" class="flex sm:hidden" />
       </div>
       <LongShortBar :long-pct="longPct" />
+      <!-- Mobile: L/S unter den jeweiligen Balkenfarben (L links, S rechts) -->
+      <div class="flex w-full mt-1 text-[9px] font-mono font-bold tabular-nums sm:hidden">
+        <div class="flex justify-start flex-1 min-w-0" :style="{ flex: `${longPct} ${longPct} 0%` }">
+          <span class="text-positive">{{ longDisplay }}</span>
+        </div>
+        <div class="flex justify-end flex-1 min-w-0" :style="{ flex: `${shortPct} ${shortPct} 0%` }">
+          <span class="text-negative">{{ shortDisplay }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Price Block -->
@@ -173,6 +184,9 @@ const longPct = computed(() => {
 })
 
 const shortPct = computed(() => 100 - longPct.value)
+
+const longDisplay = computed(() => formatCurrencyEUR(totalLong.value))
+const shortDisplay = computed(() => formatCurrencyEUR(totalShort.value))
 
 const tableRows = computed<PanelTableRow[]>(() =>
   positions.value.map(p => ({
