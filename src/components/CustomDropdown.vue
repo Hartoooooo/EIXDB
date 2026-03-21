@@ -3,7 +3,7 @@
     <!-- Trigger -->
     <button
       type="button"
-      class="flex items-center justify-between gap-2 w-full min-w-[4rem] text-[10px] font-mono font-bold tracking-wider bg-surface2 border border-border rounded-md px-2 py-1.5 text-text-primary hover:border-text-secondary/50 transition-colors duration-150 text-left"
+      class="flex items-center justify-between gap-1 w-full min-w-[3.5rem] text-[9px] font-mono font-bold tracking-wider bg-surface2 border border-border rounded px-1.5 py-1 text-text-primary hover:border-text-secondary/50 transition-colors duration-150 text-left"
       :class="{ 'ring-1 ring-border': isOpen }"
       @click="toggle"
     >
@@ -29,7 +29,7 @@
           v-for="opt in options"
           :key="opt.value"
           type="button"
-          class="w-full px-3 py-1.5 text-left text-[10px] font-mono font-bold tracking-wider transition-colors duration-100"
+          class="w-full px-2 py-1 text-left text-[9px] font-mono font-bold tracking-wider transition-colors duration-100"
           :class="modelValue === opt.value
             ? 'bg-border text-text-primary'
             : 'text-text-secondary hover:bg-surface hover:text-text-primary'"

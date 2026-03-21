@@ -163,7 +163,7 @@
                 type="button"
                 class="w-2 h-2 rounded-full transition-colors duration-200"
                 :class="cardsPage === p - 1 ? 'bg-text-primary' : 'bg-border hover:bg-text-secondary'"
-                :aria-label="p === 3 ? 'Rohstoff-Karten' : `Karten ${(p - 1) * 3 + 1}–${(p - 1) * 3 + 3}`"
+                :aria-label="p === 3 ? 'Rohstoff-Karten mit Filter (5)' : `Karten ${(p - 1) * 5 + 1}–${(p - 1) * 5 + 5}`"
                 @click="cardsPage = p - 1"
               />
             </div>
@@ -186,155 +186,35 @@
             class="flex transition-transform duration-300 ease-out"
             :style="{ width: '300%', transform: `translateX(-${cardsPage * 33.333}%)` }"
           >
-            <!-- Seite 1: Gold, Silver, Crypto -->
-            <div class="flex-[0_0_33.333%] min-w-0 shrink-0 flex">
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pr-2">
-                <CategoryPanel
-                  category="gold"
-                  title="GOLD OPERATIONS"
-                  symbol="GC=F"
-                  sentiment-label="GOLD SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.gold"
-                  :table-rows="marketStore.panelTables.gold"
-                  :long-pct="goldPosition?.longPct ?? 50"
-                  :short-pct="goldPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.gold"
-                  :table-loading="marketStore.panelTablesLoading.gold"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('gold')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('gold')?.shortValue"
-                  :long-eur="goldPosition?.longEur"
-                  :short-eur="goldPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('gold')?.topPositions"
-                />
-              </div>
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 px-1">
-                <CategoryPanel
-                  category="silver"
-                  title="SILVER TERMINAL"
-                  symbol="SI=F"
-                  sentiment-label="SILVER SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.silver"
-                  :table-rows="marketStore.panelTables.silver"
-                  :long-pct="silverPosition?.longPct ?? 50"
-                  :short-pct="silverPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.silver"
-                  :table-loading="marketStore.panelTablesLoading.silver"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('silver')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('silver')?.shortValue"
-                  :long-eur="silverPosition?.longEur"
-                  :short-eur="silverPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('silver')?.topPositions"
-                />
-              </div>
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pl-2">
-                <CategoryPanel
-                  category="crypto"
-                  title="BITCOIN"
-                  symbol="BTC/USD"
-                  sentiment-label="BITCOIN SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.crypto"
-                  :table-rows="marketStore.panelTables.crypto"
-                  :long-pct="cryptoPosition?.longPct ?? 50"
-                  :short-pct="cryptoPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.crypto"
-                  :table-loading="marketStore.panelTablesLoading.crypto"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('crypto')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('crypto')?.shortValue"
-                  :long-eur="cryptoPosition?.longEur"
-                  :short-eur="cryptoPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('crypto')?.topPositions"
-                />
+            <!-- Seite 1: 5 Karten (Gold, Silver, Crypto, Platinum, ETH) -->
+            <div class="flex-[0_0_33.333%] min-w-0 shrink-0">
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <div class="min-w-0"><CategoryPanel category="gold" title="GOLD" symbol="GC=F" sentiment-label="GOLD" table-title="Größte Positionen" :chart-points="marketStore.chartData.gold" :table-rows="marketStore.panelTables.gold" :long-pct="goldPosition?.longPct ?? 50" :short-pct="goldPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.gold" :table-loading="marketStore.panelTablesLoading.gold" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('gold')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('gold')?.shortValue" :long-eur="goldPosition?.longEur" :short-eur="goldPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('gold')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="silver" title="SILVER" symbol="SI=F" sentiment-label="SILVER" table-title="Größte Positionen" :chart-points="marketStore.chartData.silver" :table-rows="marketStore.panelTables.silver" :long-pct="silverPosition?.longPct ?? 50" :short-pct="silverPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.silver" :table-loading="marketStore.panelTablesLoading.silver" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('silver')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('silver')?.shortValue" :long-eur="silverPosition?.longEur" :short-eur="silverPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('silver')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="crypto" title="BTC" symbol="BTC/USD" sentiment-label="BTC" table-title="Größte Positionen" :chart-points="marketStore.chartData.crypto" :table-rows="marketStore.panelTables.crypto" :long-pct="cryptoPosition?.longPct ?? 50" :short-pct="cryptoPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.crypto" :table-loading="marketStore.panelTablesLoading.crypto" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('crypto')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('crypto')?.shortValue" :long-eur="cryptoPosition?.longEur" :short-eur="cryptoPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('crypto')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="platinum" title="PLATINUM" symbol="PL=F" sentiment-label="PLATINUM" table-title="Größte Positionen" :chart-points="marketStore.chartData.platinum" :table-rows="marketStore.panelTables.platinum" :long-pct="platinumPosition?.longPct ?? 50" :short-pct="platinumPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.platinum" :table-loading="marketStore.panelTablesLoading.platinum" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('platinum')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('platinum')?.shortValue" :long-eur="platinumPosition?.longEur" :short-eur="platinumPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('platinum')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="eth" title="ETH" symbol="ETH/USD" sentiment-label="ETH" table-title="Größte Positionen" :chart-points="marketStore.chartData.eth" :table-rows="marketStore.panelTables.eth" :long-pct="ethPosition?.longPct ?? 50" :short-pct="ethPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.eth" :table-loading="marketStore.panelTablesLoading.eth" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('eth')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('eth')?.shortValue" :long-eur="ethPosition?.longEur" :short-eur="ethPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('eth')?.topPositions" /></div>
               </div>
             </div>
 
-            <!-- Seite 2: Platinum, ETH, Oil -->
-            <div class="flex-[0_0_33.333%] min-w-0 shrink-0 flex">
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pr-2">
-                <CategoryPanel
-                  category="platinum"
-                  title="PLATINUM"
-                  symbol="PL=F"
-                  sentiment-label="PLATINUM SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.platinum"
-                  :table-rows="marketStore.panelTables.platinum"
-                  :long-pct="platinumPosition?.longPct ?? 50"
-                  :short-pct="platinumPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.platinum"
-                  :table-loading="marketStore.panelTablesLoading.platinum"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('platinum')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('platinum')?.shortValue"
-                  :long-eur="platinumPosition?.longEur"
-                  :short-eur="platinumPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('platinum')?.topPositions"
-                />
-              </div>
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 px-1">
-                <CategoryPanel
-                  category="eth"
-                  title="ETH"
-                  symbol="ETH/USD"
-                  sentiment-label="ETH SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.eth"
-                  :table-rows="marketStore.panelTables.eth"
-                  :long-pct="ethPosition?.longPct ?? 50"
-                  :short-pct="ethPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.eth"
-                  :table-loading="marketStore.panelTablesLoading.eth"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('eth')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('eth')?.shortValue"
-                  :long-eur="ethPosition?.longEur"
-                  :short-eur="ethPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('eth')?.topPositions"
-                />
-              </div>
-              <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pl-2">
-                <CategoryPanel
-                  category="oil"
-                  title="OIL"
-                  symbol="CL=F"
-                  sentiment-label="OIL SENTIMENT"
-                  table-title="Größte Positionen"
-                  :chart-points="marketStore.chartData.oil"
-                  :table-rows="marketStore.panelTables.oil"
-                  :long-pct="oilPosition?.longPct ?? 50"
-                  :short-pct="oilPosition?.shortPct ?? 50"
-                  :chart-loading="marketStore.chartLoading.oil"
-                  :table-loading="marketStore.panelTablesLoading.oil"
-                  :gauge-loading="positionsStore.loading"
-                  :live-long-value="glattLibStore.categoryAggregates.get('oil')?.longValue"
-                  :live-short-value="glattLibStore.categoryAggregates.get('oil')?.shortValue"
-                  :long-eur="oilPosition?.longEur"
-                  :short-eur="oilPosition?.shortEur"
-                  :live-top-positions="glattLibStore.categoryAggregates.get('oil')?.topPositions"
-                />
+            <!-- Seite 2: 5 Karten (Oil + 4 Rohstoff-Karten) -->
+            <div class="flex-[0_0_33.333%] min-w-0 shrink-0">
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <div class="min-w-0"><CategoryPanel category="oil" title="OIL" symbol="CL=F" sentiment-label="OIL" table-title="Größte Positionen" :chart-points="marketStore.chartData.oil" :table-rows="marketStore.panelTables.oil" :long-pct="oilPosition?.longPct ?? 50" :short-pct="oilPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.oil" :table-loading="marketStore.panelTablesLoading.oil" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('oil')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('oil')?.shortValue" :long-eur="oilPosition?.longEur" :short-eur="oilPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('oil')?.topPositions" /></div>
+                <template v-for="(c, idx) in displayedCommoditiesPadded.slice(0, 4)" :key="'p2-' + (c?.id ?? idx)">
+                  <div v-if="c" class="min-w-0"><CommodityAssetCard :commodity="c" :model-value="commoditySlotFilters[idx]" :show-filters="false" @update:model-value="(f) => updateSlotFilter(idx, f)" /></div>
+                  <div v-else class="min-w-0 rounded-xl border border-border bg-surface/50 min-h-[320px]" />
+                </template>
               </div>
             </div>
 
-            <!-- Seite 3: Rohstoff-Karten mit Filter oben in jeder Karte -->
-            <div class="flex-[0_0_33.333%] min-w-0 shrink-0 flex">
-              <div
-                v-for="(c, idx) in displayedCommoditiesPadded"
-                :key="commoditySlotFilters[idx].commodityId + '-' + idx"
-                class="flex-[0_0_33.333%] min-w-0 shrink-0"
-                :class="idx === 0 ? 'pr-2' : idx === 1 ? 'px-1' : 'pl-2'"
-              >
-                <CommodityAssetCard
-                  v-if="c"
-                  :commodity="c"
-                  :model-value="commoditySlotFilters[idx]"
-                  @update:model-value="(f) => updateSlotFilter(idx, f)"
-                />
-                <div v-else class="rounded-2xl border border-border bg-surface/50 min-h-[400px]" />
+            <!-- Seite 3: 5 Rohstoff-Karten mit Filter (nur diese haben Filter) -->
+            <div class="flex-[0_0_33.333%] min-w-0 shrink-0">
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <template v-for="(c, idx) in displayedCommoditiesPaddedPage3" :key="'p3-' + (c?.id ?? idx)">
+                  <div v-if="c" class="min-w-0"><CommodityAssetCard :commodity="c" :model-value="commoditySlotFilters[idx]" :show-filters="true" @update:model-value="(f) => updateSlotFilter(idx, f)" /></div>
+                  <div v-else class="min-w-0 rounded-xl border border-border bg-surface/50 min-h-[320px]" />
+                </template>
               </div>
             </div>
           </div>
@@ -606,16 +486,23 @@ const { aggregates: positionAggregates } = storeToRefs(positionsStore)
 const isRefreshing = ref(false)
 const activeFilter = ref<FilterParams>({ location: 'ALL', subBasket: 'EIX' })
 const cardsPage = ref(0)
-/** Pro-Karte eigener Filter (Rohstoff, Seite, Hebel) */
+/** Pro-Karte eigener Filter – 4 Slots für Seite 2, 5 Slots für Seite 3 */
 const commoditySlotFilters = ref<CommodityCardFilter[]>([
   { commodityId: 'gold', side: 'ALL', leverage: 'ALL' },
   { commodityId: 'silver', side: 'ALL', leverage: 'ALL' },
   { commodityId: 'platinum', side: 'ALL', leverage: 'ALL' },
+  { commodityId: 'oil', side: 'ALL', leverage: 'ALL' },
+  { commodityId: 'copper', side: 'ALL', leverage: 'ALL' },
 ])
 
-/** Rohstoff-Info pro Slot + Platzhalter für leere Slots */
+/** Rohstoff-Info für Seite 2 (4 Karten ohne Filter) */
 const displayedCommoditiesPadded = computed(() => {
   return commoditySlotFilters.value.map(f => COMMODITY_INFOS.find(c => c.id === f.commodityId) ?? null)
+})
+
+/** Rohstoff-Info für Seite 3 (5 Karten mit Filter) */
+const displayedCommoditiesPaddedPage3 = computed(() => {
+  return displayedCommoditiesPadded.value.slice(0, 5)
 })
 
 function updateSlotFilter(index: number, filter: CommodityCardFilter) {

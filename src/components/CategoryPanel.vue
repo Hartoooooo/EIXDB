@@ -3,33 +3,33 @@
     class="flex flex-col rounded-2xl border border-border bg-surface overflow-hidden"
   >
     <!-- Panel Header -->
-    <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-border">
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-mono font-bold tracking-[0.18em] uppercase text-text-primary">
+    <div class="flex items-center justify-between px-3 pt-2 pb-2 border-b border-border">
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary">
           {{ title }}
         </span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">4H</span>
-        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">TICK</span>
+      <div class="flex items-center gap-1">
+        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">4H</span>
+        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">TICK</span>
       </div>
     </div>
 
     <!-- Price Block -->
-    <div class="flex items-end justify-between px-5 py-4">
+    <div class="flex items-end justify-between px-3 py-2">
       <div>
-        <div class="text-xs font-mono text-text-secondary tracking-widest mb-1">{{ symbol }}</div>
-        <div v-if="chartLoading" class="mb-1">
-          <LoadingSkeleton height="2.25rem" width="9rem" />
+        <div class="text-[10px] font-mono text-text-secondary tracking-widest mb-0.5">{{ symbol }}</div>
+        <div v-if="chartLoading" class="mb-0.5">
+          <LoadingSkeleton height="1.5rem" width="6rem" />
         </div>
-        <div v-else class="text-3xl font-mono font-bold text-text-primary tabular-nums leading-none">
+        <div v-else class="text-xl font-mono font-bold text-text-primary tabular-nums leading-none">
           {{ formattedPrice }}
         </div>
       </div>
       <div>
         <span
           v-if="!chartLoading"
-          class="text-sm font-mono font-semibold px-2.5 py-1 rounded-lg tabular-nums"
+          class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded tabular-nums"
           :class="lastChangePct >= 0 ? 'bg-positive/10 text-positive' : 'bg-negative/10 text-negative'"
         >
           {{ lastChangePct >= 0 ? '+' : '' }}{{ lastChangePct.toFixed(2) }}%
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Mini Chart -->
-    <div class="px-4 pb-2">
+    <div class="px-3 pb-1">
       <MiniLineChart
         :points="chartPoints"
         :accentColor="accentColor"
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Sentiment Gauge (L/S mit Exposure € statt %) -->
-    <div class="mx-4 mt-2 mb-2 py-3 border-t border-border">
+    <div class="mx-3 mt-1 mb-1 py-2 border-t border-border">
       <SentimentGauge
         :label="sentimentLabel"
         :longPct="effectiveLongPct"
@@ -56,15 +56,17 @@
         :long-value="effectiveLongValue"
         :short-value="effectiveShortValue"
         :loading="gaugeLoading"
+        compact
       />
     </div>
 
     <!-- Data Table -->
-    <div class="mx-4 mb-4 mt-1 pt-3 border-t border-border">
+    <div class="mx-3 mb-3 mt-1 pt-2 border-t border-border">
       <DataTableMini
         :title="effectiveTableTitle"
         :rows="effectiveTableRows"
         :loading="tableLoading"
+        compact
       />
     </div>
   </div>
@@ -109,7 +111,7 @@ const props = withDefaults(defineProps<{
   chartLoading: false,
   tableLoading: false,
   gaugeLoading: false,
-  chartHeight: 120,
+  chartHeight: 80,
   liveLongValue: undefined,
   liveShortValue: undefined,
   longEur: undefined,

@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col items-center gap-3 py-2">
+  <div
+    class="flex flex-col items-center flex-wrap justify-center"
+    :class="compact ? 'gap-1.5 py-1' : 'gap-3 py-2'"
+  >
     <!-- Loading: gleiche Ladeanimation wie der Rest -->
     <template v-if="loading">
       <LoadingSkeleton height="0.875rem" width="6rem" class="rounded" />
@@ -11,13 +14,16 @@
     </template>
 
     <template v-else>
-      <span class="text-xs font-mono font-semibold tracking-widest text-text-secondary uppercase">
+      <span
+        class="font-mono font-semibold tracking-widest text-text-secondary uppercase"
+        :class="compact ? 'text-[9px]' : 'text-xs'"
+      >
         {{ label }}
       </span>
 
       <!-- Semi-Circle SVG -->
-      <div class="relative">
-        <svg width="136" height="76" viewBox="0 0 160 90">
+      <div class="relative origin-center" :class="compact ? 'scale-[0.82]' : ''">
+        <svg :width="compact ? 120 : 136" :height="compact ? 68 : 76" viewBox="0 0 160 90">
         <!-- Subdominante Seite zuerst (unten) -->
         <path
           v-if="longPct >= shortPct"
@@ -68,21 +74,24 @@
     </div>
 
     <!-- Legend: G Gesamt, L, S mit Exposure (€) -->
-    <div class="flex items-center gap-4 text-xs font-mono flex-wrap justify-center">
-      <div v-if="totalDisplay" class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full bg-white" />
+    <div
+      class="flex items-center font-mono flex-wrap justify-center"
+      :class="compact ? 'gap-1.5 text-[9px]' : 'gap-4 text-xs'"
+    >
+      <div v-if="totalDisplay" class="flex items-center gap-1">
+        <div class="rounded-full bg-white" :class="compact ? 'w-1.5 h-1.5' : 'w-2 h-2'" />
         <span class="text-text-secondary tracking-widest uppercase mr-0.5">G</span>
-        <span class="text-text-primary font-semibold tabular-nums">{{ totalDisplay }}</span>
+        <span class="text-text-primary font-semibold tabular-nums" :class="compact ? 'text-[9px]' : ''">{{ totalDisplay }}</span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full bg-positive" />
+      <div class="flex items-center gap-1">
+        <div class="rounded-full bg-positive" :class="compact ? 'w-1.5 h-1.5' : 'w-2 h-2'" />
         <span class="text-text-secondary tracking-widest uppercase mr-0.5">L</span>
-        <span class="text-positive font-semibold tabular-nums">{{ longDisplay }}</span>
+        <span class="text-positive font-semibold tabular-nums" :class="compact ? 'text-[9px]' : ''">{{ longDisplay }}</span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <div class="w-2 h-2 rounded-full bg-negative" />
+      <div class="flex items-center gap-1">
+        <div class="rounded-full bg-negative" :class="compact ? 'w-1.5 h-1.5' : 'w-2 h-2'" />
         <span class="text-text-secondary tracking-widest uppercase mr-0.5">S</span>
-        <span class="text-negative font-semibold tabular-nums">{{ shortDisplay }}</span>
+        <span class="text-negative font-semibold tabular-nums" :class="compact ? 'text-[9px]' : ''">{{ shortDisplay }}</span>
       </div>
     </div>
     </template>
@@ -105,9 +114,11 @@ const props = withDefaults(defineProps<{
   /** Gesamt Exposure (€) – optional, sonst longValue+shortValue */
   totalValue?: number
   loading?: boolean
+  compact?: boolean
 }>(), {
   label: 'SENTIMENT',
   loading: false,
+  compact: false,
 })
 
 const longDisplay = computed(() => {
