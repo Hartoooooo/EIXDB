@@ -60,7 +60,7 @@
       <!-- ─── Live Bestände (GlattLib) ─────────────────────────────────── -->
       <section>
         <div class="flex items-center gap-3 mb-4">
-          <h2 class="text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
+          <h2 class="text-[9px] sm:text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
             Live Bestände
           </h2>
           <div class="flex-1 h-px bg-border" />
@@ -140,7 +140,7 @@
       <div class="w-full">
         <div class="flex flex-col gap-3 mb-4">
           <div class="flex items-center gap-3">
-            <h2 class="text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
+            <h2 class="text-[9px] sm:text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
               Asset Cards
             </h2>
             <div class="flex-1 h-px bg-border" />
@@ -224,7 +224,7 @@
       <!-- Positions Overview: Titel + Nav (Pfeile + Dots) in einer Zeile -->
       <section>
         <div class="flex items-center gap-3 mb-1">
-          <h2 class="text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
+          <h2 class="text-[9px] sm:text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
             Positions Overview
           </h2>
           <div class="flex-1 h-px bg-border" />
@@ -326,7 +326,7 @@
       <!-- Recent Trades: Titel + Nav (Pfeile + Dots) in einer Zeile -->
       <section>
         <div class="flex items-center gap-3 mb-1">
-          <h2 class="text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
+          <h2 class="text-[9px] sm:text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
             Recent Trades
           </h2>
           <div class="flex-1 h-px bg-border" />

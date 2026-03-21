@@ -1,14 +1,14 @@
 <template>
   <header class="sticky top-0 z-50 bg-surface border-b border-border backdrop-blur-sm">
     <div class="relative flex items-center justify-between px-4 md:px-6 py-3 max-w-[1600px] mx-auto">
-    <!-- Left: Selektoren -->
-    <div class="flex items-center gap-2">
+    <!-- Left: Selektoren (mobile: kleiner + untereinander) -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
       <!-- Location Selector: ALL / BER / MUN -->
-      <div class="flex items-center rounded-lg bg-surface2 border border-border p-0.5">
+      <div class="flex items-center rounded-md sm:rounded-lg bg-surface2 border border-border p-0.5">
         <button
           v-for="loc in locations"
           :key="loc"
-          class="px-3 py-1 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-150"
+          class="px-2 sm:px-3 py-0.5 sm:py-1 rounded font-mono text-[9px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-150"
           :class="selectedLocation === loc
             ? 'bg-border text-text-primary'
             : 'text-text-secondary hover:text-text-primary'"
@@ -18,14 +18,14 @@
         </button>
       </div>
 
-      <span class="text-border">/</span>
+      <span class="hidden sm:inline text-border">/</span>
 
       <!-- Sub-Basket Selector: EIX / HAM -->
-      <div class="flex items-center rounded-lg bg-surface2 border border-border p-0.5">
+      <div class="flex items-center rounded-md sm:rounded-lg bg-surface2 border border-border p-0.5">
         <button
           v-for="sb in subBaskets"
           :key="sb"
-          class="px-3 py-1 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-150"
+          class="px-2 sm:px-3 py-0.5 sm:py-1 rounded font-mono text-[9px] sm:text-xs font-bold tracking-widest uppercase transition-all duration-150"
           :class="selectedSubBasket === sb
             ? 'bg-border text-text-primary'
             : 'text-text-secondary hover:text-text-primary'"
