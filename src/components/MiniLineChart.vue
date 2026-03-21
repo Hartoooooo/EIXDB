@@ -24,46 +24,44 @@
         </linearGradient>
       </defs>
 
-      <!-- Y-Achse Linie -->
-      <line :x1="padLeft" :y1="padTop" :x2="padLeft" :y2="chartBottom" stroke="var(--color-border)" stroke-width="1" opacity="0.6" />
-      <!-- Y-Achse Beschriftungen (Werte) -->
-      <template v-for="(label, idx) in yAxisLabels" :key="'y-' + idx">
-        <line
-          :x1="padLeft"
-          :y1="yAxisTicks[idx]"
-          :x2="svgW - padRight"
-          :y2="yAxisTicks[idx]"
-          stroke="var(--color-border)"
-          stroke-width="0.5"
-          stroke-dasharray="2 2"
-          opacity="0.4"
-        />
-        <text
-          :x="padLeft - 6"
-          :y="yAxisTicks[idx] + 4"
-          text-anchor="end"
-          font-family="JetBrains Mono, monospace"
-          font-size="9"
-          fill="var(--color-text-secondary)"
-        >
-          {{ label }}
-        </text>
-      </template>
-
-      <!-- X-Achse Linie -->
-      <line :x1="padLeft" :y1="chartBottom" :x2="svgW - padRight" :y2="chartBottom" stroke="var(--color-border)" stroke-width="1" opacity="0.6" />
-      <!-- X-Achse Beschriftungen (Zeit) -->
-      <template v-for="(label, idx) in xAxisLabels" :key="'x-' + idx">
-        <text
-          :x="xAxisPositions[idx]"
-          :y="chartBottom + 14"
-          text-anchor="middle"
-          font-family="JetBrains Mono, monospace"
-          font-size="9"
-          fill="var(--color-text-secondary)"
-        >
-          {{ label }}
-        </text>
+      <!-- Y-Achse (nur wenn nicht hideLabels) -->
+      <template v-if="!hideLabels">
+        <line :x1="padLeft" :y1="padTop" :x2="padLeft" :y2="chartBottom" stroke="var(--color-border)" stroke-width="1" opacity="0.6" />
+        <template v-for="(label, idx) in yAxisLabels" :key="'y-' + idx">
+          <line
+            :x1="padLeft"
+            :y1="yAxisTicks[idx]"
+            :x2="svgW - padRight"
+            :y2="yAxisTicks[idx]"
+            stroke="var(--color-border)"
+            stroke-width="0.5"
+            stroke-dasharray="2 2"
+            opacity="0.4"
+          />
+          <text
+            :x="padLeft - 6"
+            :y="yAxisTicks[idx] + 4"
+            text-anchor="end"
+            font-family="JetBrains Mono, monospace"
+            font-size="9"
+            fill="var(--color-text-secondary)"
+          >
+            {{ label }}
+          </text>
+        </template>
+        <line :x1="padLeft" :y1="chartBottom" :x2="svgW - padRight" :y2="chartBottom" stroke="var(--color-border)" stroke-width="1" opacity="0.6" />
+        <template v-for="(label, idx) in xAxisLabels" :key="'x-' + idx">
+          <text
+            :x="xAxisPositions[idx]"
+            :y="chartBottom + 14"
+            text-anchor="middle"
+            font-family="JetBrains Mono, monospace"
+            font-size="9"
+            fill="var(--color-text-secondary)"
+          >
+            {{ label }}
+          </text>
+        </template>
       </template>
 
       <!-- Area Fill -->
@@ -107,23 +105,26 @@ const props = withDefaults(defineProps<{
   accentColor?: string
   height?: number
   loading?: boolean
+  /** Keine Achsenbeschriftung (für mobile kompakte Ansicht) */
+  hideLabels?: boolean
 }>(), {
   accentColor: '#F5C542',
   height: 220,
   loading: false,
+  hideLabels: false,
 })
 
 const uid = `mlc-${_uidCounter++}`
 
-const padLeft = 52
-const padTop = 10
-const padRight = 8
-const padBottom = 28
-const chartW = 400
-const svgW = padLeft + chartW + padRight
+const padLeft = computed(() => props.hideLabels ? 4 : 52)
+const padTop = computed(() => props.hideLabels ? 4 : 10)
+const padRight = computed(() => props.hideLabels ? 4 : 8)
+const padBottom = computed(() => props.hideLabels ? 4 : 28)
+const chartW = computed(() => 400 - (props.hideLabels ? 48 : 0))
+const svgW = computed(() => padLeft.value + chartW.value + padRight.value)
 const svgH = computed(() => props.height)
-const chartH = computed(() => Math.max(60, props.height - padTop - padBottom))
-const chartBottom = computed(() => padTop + chartH.value)
+const chartH = computed(() => Math.max(60, props.height - padTop.value - padBottom.value))
+const chartBottom = computed(() => padTop.value + chartH.value)
 const chartHeight = computed(() => props.height)
 
 // X-Achse: 7:30–22:00 (870 Minuten)
@@ -137,7 +138,7 @@ function minutesFrom730(iso: string): number {
   return minOfDay - DAY_START_MIN
 }
 
-/** Nur Punkte bis zur aktuellen Zeit, innerhalb 7:30–22:00 */
+/** Punkte bis zur aktuellen Zeit, innerhalb 7:30–22:00 (Desktop) */
 const pointsUpToNow = computed(() => {
   const now = new Date()
   const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60
@@ -148,21 +149,47 @@ const pointsUpToNow = computed(() => {
   })
 })
 
+/** Letzte 6 Stunden Verlauf (Mobile – nutzt volle Chart-Breite) */
+const pointsLast6h = computed(() => {
+  const now = new Date().getTime()
+  const sixHoursAgo = now - 6 * 60 * 60 * 1000
+  return props.points.filter((p) => new Date(p.time).getTime() >= sixHoursAgo)
+})
+
+/** Punkte je nach Modus: hideLabels = letzte 6h, sonst bis jetzt */
+const displayPoints = computed(() =>
+  props.hideLabels ? pointsLast6h.value : pointsUpToNow.value
+)
+
 const coords = computed(() => {
-  if (!pointsUpToNow.value.length) return []
-  const pts = pointsUpToNow.value
+  if (!displayPoints.value.length) return []
+  const pts = displayPoints.value
   const values = pts.map(p => p.value)
   const min = Math.min(...values)
   const max = Math.max(...values)
   const range = max - min || 1
   const innerPad = 8
 
+  if (props.hideLabels) {
+    const times = pts.map((p) => new Date(p.time).getTime())
+    const tMin = Math.min(...times)
+    const tRange = Math.max(...times) - tMin || 1
+    return pts.map((p) => {
+      const t = new Date(p.time).getTime()
+      const xRatio = tRange > 0 ? (t - tMin) / tRange : 1
+      return {
+        x: padLeft.value + xRatio * chartW.value,
+        y: padTop.value + innerPad + ((max - p.value) / range) * (chartH.value - innerPad * 2),
+      }
+    })
+  }
+
   return pts.map((p) => {
     const minFrom730 = minutesFrom730(p.time)
     const xRatio = Math.max(0, Math.min(1, minFrom730 / DAY_SPAN_MIN))
     return {
-      x: padLeft + xRatio * chartW,
-      y: padTop + innerPad + ((max - p.value) / range) * (chartH.value - innerPad * 2),
+      x: padLeft.value + xRatio * chartW.value,
+      y: padTop.value + innerPad + ((max - p.value) / range) * (chartH.value - innerPad * 2),
     }
   })
 })
@@ -188,8 +215,8 @@ const areaPath = computed(() => {
 const lastPoint = computed(() => coords.value[coords.value.length - 1] ?? null)
 
 const yAxisLabels = computed(() => {
-  if (!pointsUpToNow.value.length) return []
-  const values = pointsUpToNow.value.map(p => p.value)
+  if (!displayPoints.value.length) return []
+  const values = displayPoints.value.map(p => p.value)
   const min = Math.min(...values)
   const max = Math.max(...values)
   const range = max - min || 1
@@ -202,13 +229,17 @@ const yAxisLabels = computed(() => {
 })
 
 const yAxisTicks = computed(() => {
-  if (!pointsUpToNow.value.length) return []
+  if (!displayPoints.value.length) return []
   const b = chartBottom.value
   const h = chartH.value
-  return [padTop, padTop + h / 2, b]
+  return [padTop.value, padTop.value + h / 2, b]
 })
 
 // X-Achse fest: 7:30, 14:45, 22:00
 const xAxisLabels = ['7:30', '14:45', '22:00']
-const xAxisPositions = [padLeft + 0 * chartW, padLeft + 0.5 * chartW, padLeft + 1 * chartW]
+const xAxisPositions = computed(() => [
+  padLeft.value + 0 * chartW.value,
+  padLeft.value + 0.5 * chartW.value,
+  padLeft.value + 1 * chartW.value,
+])
 </script>

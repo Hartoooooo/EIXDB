@@ -55,14 +55,14 @@
     <!-- Price Block -->
     <div class="flex items-end justify-between px-3 py-2">
       <div>
-        <div class="text-[10px] font-mono text-text-secondary tracking-widest mb-0.5">{{ commodity.symbol }}</div>
-        <div class="text-xl font-mono font-bold text-text-primary tabular-nums leading-none">
+        <div class="text-[9px] sm:text-[10px] font-mono text-text-secondary tracking-widest mb-0.5">{{ commodity.symbol }}</div>
+        <div class="text-lg sm:text-xl font-mono font-bold text-text-primary tabular-nums leading-none">
           {{ formattedPrice }}
         </div>
       </div>
       <div>
         <span
-          class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded tabular-nums"
+          class="text-[9px] sm:text-[10px] font-mono font-semibold px-2 py-0.5 rounded tabular-nums"
           :class="lastChangePct >= 0 ? 'bg-positive/10 text-positive' : 'bg-negative/10 text-negative'"
         >
           {{ lastChangePct >= 0 ? '+' : '' }}{{ lastChangePct.toFixed(2) }}%
@@ -70,28 +70,55 @@
       </div>
     </div>
 
-    <!-- Mini Chart -->
-    <div class="px-3 pb-1">
-      <MiniLineChart
-        :points="chartPoints"
-        :accentColor="commodity.accentColor"
-        :height="chartHeight"
-        :loading="false"
-      />
-    </div>
-
-    <!-- Sentiment Gauge (L/S mit Exposure €) -->
-    <div class="mx-3 mt-1 mb-1 py-2 border-t border-border">
-      <SentimentGauge
-        :label="`${commodity.shortName ?? commodity.name} SENTIMENT`"
-        :longPct="longPct"
-        :shortPct="shortPct"
-        :long-value="totalLong"
-        :short-value="totalShort"
-        :loading="false"
-        compact
-        hide-legend
-      />
+    <!-- Chart + Gauge: Mobile nebeneinander, Desktop untereinander -->
+    <div class="mx-3 mt-1 border-t border-border pt-2 pb-2 sm:pb-1">
+      <div class="flex flex-row sm:flex-col gap-2 sm:gap-0 items-center sm:items-stretch">
+        <!-- Mini Chart: Mobile klein ohne Labels, Desktop normal -->
+        <div class="flex-1 min-w-0 sm:w-full sm:pb-1">
+          <MiniLineChart
+            :points="chartPoints"
+            :accentColor="commodity.accentColor"
+            :height="56"
+            :loading="false"
+            :hide-labels="true"
+            class="sm:hidden h-14"
+          />
+          <MiniLineChart
+            :points="chartPoints"
+            :accentColor="commodity.accentColor"
+            :height="chartHeight"
+            :loading="false"
+            class="hidden sm:block"
+          />
+        </div>
+        <!-- Sentiment Gauge: Mobile klein inline, Desktop normal -->
+        <div class="shrink-0 flex justify-center sm:w-full sm:pt-2 sm:border-t sm:border-border">
+          <SentimentGauge
+            :label="`${commodity.shortName ?? commodity.name} SENTIMENT`"
+            :longPct="longPct"
+            :shortPct="shortPct"
+            :long-value="totalLong"
+            :short-value="totalShort"
+            :loading="false"
+            compact
+            hide-legend
+            hide-label
+            extra-compact
+            class="sm:hidden"
+          />
+          <SentimentGauge
+            :label="`${commodity.shortName ?? commodity.name} SENTIMENT`"
+            :longPct="longPct"
+            :shortPct="shortPct"
+            :long-value="totalLong"
+            :short-value="totalShort"
+            :loading="false"
+            compact
+            hide-legend
+            class="hidden sm:block"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- Data Table: Größte Positionen -->

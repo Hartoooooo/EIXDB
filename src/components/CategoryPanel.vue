@@ -37,18 +37,18 @@
     <!-- Price Block -->
     <div class="flex items-end justify-between px-3 py-2">
       <div>
-        <div class="text-[10px] font-mono text-text-secondary tracking-widest mb-0.5">{{ symbol }}</div>
+        <div class="text-[9px] sm:text-[10px] font-mono text-text-secondary tracking-widest mb-0.5">{{ symbol }}</div>
         <div v-if="chartLoading" class="mb-0.5">
           <LoadingSkeleton height="1.5rem" width="6rem" />
         </div>
-        <div v-else class="text-xl font-mono font-bold text-text-primary tabular-nums leading-none">
+        <div v-else class="text-lg sm:text-xl font-mono font-bold text-text-primary tabular-nums leading-none">
           {{ formattedPrice }}
         </div>
       </div>
       <div>
         <span
           v-if="!chartLoading"
-          class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded tabular-nums"
+          class="text-[9px] sm:text-[10px] font-mono font-semibold px-2 py-0.5 rounded tabular-nums"
           :class="lastChangePct >= 0 ? 'bg-positive/10 text-positive' : 'bg-negative/10 text-negative'"
         >
           {{ lastChangePct >= 0 ? '+' : '' }}{{ lastChangePct.toFixed(2) }}%
@@ -56,28 +56,55 @@
       </div>
     </div>
 
-    <!-- Mini Chart -->
-    <div class="px-3 pb-1">
-      <MiniLineChart
-        :points="chartPoints"
-        :accentColor="accentColor"
-        :height="chartHeight"
-        :loading="chartLoading"
-      />
-    </div>
-
-    <!-- Sentiment Gauge (L/S mit Exposure € statt %) -->
-    <div class="mx-3 mt-1 mb-1 py-2 border-t border-border">
-      <SentimentGauge
-        :label="sentimentLabel"
-        :longPct="effectiveLongPct"
-        :shortPct="effectiveShortPct"
-        :long-value="effectiveLongValue"
-        :short-value="effectiveShortValue"
-        :loading="gaugeLoading"
-        compact
-        hide-legend
-      />
+    <!-- Chart + Gauge: Mobile nebeneinander, Desktop untereinander -->
+    <div class="mx-3 mt-1 border-t border-border pt-2 pb-2 sm:pb-1">
+      <div class="flex flex-row sm:flex-col gap-2 sm:gap-0 items-center sm:items-stretch">
+        <!-- Mini Chart: Mobile klein ohne Labels, Desktop normal -->
+        <div class="flex-1 min-w-0 sm:w-full sm:pb-1">
+          <MiniLineChart
+            :points="chartPoints"
+            :accentColor="accentColor"
+            :height="56"
+            :loading="chartLoading"
+            :hide-labels="true"
+            class="sm:hidden h-14"
+          />
+          <MiniLineChart
+            :points="chartPoints"
+            :accentColor="accentColor"
+            :height="chartHeight"
+            :loading="chartLoading"
+            class="hidden sm:block"
+          />
+        </div>
+        <!-- Sentiment Gauge: Mobile klein inline, Desktop normal -->
+        <div class="shrink-0 flex justify-center sm:w-full sm:pt-2 sm:border-t sm:border-border">
+          <SentimentGauge
+            :label="sentimentLabel"
+            :longPct="effectiveLongPct"
+            :shortPct="effectiveShortPct"
+            :long-value="effectiveLongValue"
+            :short-value="effectiveShortValue"
+            :loading="gaugeLoading"
+            compact
+            hide-legend
+            hide-label
+            extra-compact
+            class="sm:hidden"
+          />
+          <SentimentGauge
+            :label="sentimentLabel"
+            :longPct="effectiveLongPct"
+            :shortPct="effectiveShortPct"
+            :long-value="effectiveLongValue"
+            :short-value="effectiveShortValue"
+            :loading="gaugeLoading"
+            compact
+            hide-legend
+            class="hidden sm:block"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- Data Table -->

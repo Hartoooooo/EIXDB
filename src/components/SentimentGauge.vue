@@ -15,6 +15,7 @@
 
     <template v-else>
       <span
+        v-if="!hideLabel"
         class="font-mono font-semibold tracking-widest text-text-secondary uppercase"
         :class="compact ? 'text-[9px]' : 'text-xs'"
       >
@@ -22,8 +23,8 @@
       </span>
 
       <!-- Semi-Circle SVG -->
-      <div class="relative origin-center" :class="compact ? 'scale-[0.82]' : ''">
-        <svg :width="compact ? 120 : 136" :height="compact ? 68 : 76" viewBox="0 0 160 90">
+      <div class="relative origin-center" :class="extraCompact ? 'scale-[0.65]' : compact ? 'scale-[0.82]' : ''">
+        <svg :width="extraCompact ? 90 : compact ? 120 : 136" :height="extraCompact ? 50 : compact ? 68 : 76" viewBox="0 0 160 90">
         <!-- Subdominante Seite zuerst (unten) -->
         <path
           v-if="longPct >= shortPct"
@@ -118,11 +119,17 @@ const props = withDefaults(defineProps<{
   compact?: boolean
   /** Legende (G/L/S) ausblenden – z.B. wenn im Karten-Header angezeigt */
   hideLegend?: boolean
+  /** Label ausblenden – z.B. mobile Inline-Ansicht */
+  hideLabel?: boolean
+  /** Noch kompakter – für mobile Chart+Gauge Zeile */
+  extraCompact?: boolean
 }>(), {
   label: 'SENTIMENT',
   loading: false,
   compact: false,
   hideLegend: false,
+  hideLabel: false,
+  extraCompact: false,
 })
 
 const longDisplay = computed(() => {
