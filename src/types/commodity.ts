@@ -34,6 +34,8 @@ export interface CommodityPosition {
 export interface CommodityInfo {
   id: CommodityId
   name: string
+  /** Kurzform für kompakte Darstellung (z.B. Platin statt Platinum) */
+  shortName?: string
   symbol: string
   /** Chart-Farbakzent (Hex) */
   accentColor: string

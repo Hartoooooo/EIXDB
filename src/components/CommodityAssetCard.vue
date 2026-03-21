@@ -30,13 +30,15 @@
       </div>
     </div>
 
-    <!-- Panel Header (Rohstoff-Name) -->
-    <div class="flex items-center justify-between px-3 pt-2 pb-2 border-b border-border">
-      <div class="flex items-center gap-2">
-        <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary">
-          {{ commodity.name }}
+    <!-- Panel Header (Rohstoff-Name + G/L/S Exposure) -->
+    <div class="px-3 pt-2 pb-2 border-b border-border">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary shrink-0 truncate" :title="commodity.name">
+          {{ commodity.shortName ?? commodity.name }}
         </span>
+        <ExposureLegend :long-value="totalLong" :short-value="totalShort" />
       </div>
+      <LongShortBar :long-pct="longPct" />
     </div>
 
     <!-- Price Block -->
@@ -70,13 +72,14 @@
     <!-- Sentiment Gauge (L/S mit Exposure €) -->
     <div class="mx-3 mt-1 mb-1 py-2 border-t border-border">
       <SentimentGauge
-        :label="`${commodity.name} SENTIMENT`"
+        :label="`${commodity.shortName ?? commodity.name} SENTIMENT`"
         :longPct="longPct"
         :shortPct="shortPct"
         :long-value="totalLong"
         :short-value="totalShort"
         :loading="false"
         compact
+        hide-legend
       />
     </div>
 
@@ -100,6 +103,8 @@ import type { CommodityCardFilter } from '@/types/commodity'
 import { formatPrice, formatCurrencyEUR } from '@/utils/format'
 import { getCommodityPositions, getCommodityChartData, COMMODITY_INFOS } from '@/mocks/mock.commodities'
 import CustomDropdown from './CustomDropdown.vue'
+import ExposureLegend from './ExposureLegend.vue'
+import LongShortBar from './LongShortBar.vue'
 import MiniLineChart from './MiniLineChart.vue'
 import SentimentGauge from './SentimentGauge.vue'
 import DataTableMini from './DataTableMini.vue'

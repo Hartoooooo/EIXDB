@@ -2,17 +2,18 @@
   <div
     class="flex flex-col rounded-2xl border border-border bg-surface overflow-hidden"
   >
-    <!-- Panel Header -->
-    <div class="flex items-center justify-between px-3 pt-2 pb-2 border-b border-border">
-      <div class="flex items-center gap-1">
-        <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary">
+    <!-- Panel Header (Titel + G/L/S Exposure) -->
+    <div class="px-3 pt-2 pb-2 border-b border-border">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <span class="text-[10px] font-mono font-bold tracking-[0.15em] uppercase text-text-primary shrink-0">
           {{ title }}
         </span>
+        <ExposureLegend
+          :long-value="effectiveLongValue"
+          :short-value="effectiveShortValue"
+        />
       </div>
-      <div class="flex items-center gap-1">
-        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">4H</span>
-        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface2 border border-border text-text-secondary tracking-wider">TICK</span>
-      </div>
+      <LongShortBar :long-pct="effectiveLongPct" />
     </div>
 
     <!-- Price Block -->
@@ -57,6 +58,7 @@
         :short-value="effectiveShortValue"
         :loading="gaugeLoading"
         compact
+        hide-legend
       />
     </div>
 
@@ -78,6 +80,8 @@ import type { ChartPoint, PanelTableRow } from '@/types/dto'
 import type { GlattPositionData } from '@/types/glattlib'
 import { formatPrice, formatCurrencyEUR } from '@/utils/format'
 import { CATEGORY_ACCENT } from '@/utils/color'
+import ExposureLegend from './ExposureLegend.vue'
+import LongShortBar from './LongShortBar.vue'
 import MiniLineChart from './MiniLineChart.vue'
 import SentimentGauge from './SentimentGauge.vue'
 import DataTableMini from './DataTableMini.vue'

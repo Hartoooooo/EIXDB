@@ -190,9 +190,9 @@
             <div class="flex-[0_0_33.333%] min-w-0 shrink-0">
               <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                 <div class="min-w-0"><CategoryPanel category="gold" title="GOLD" symbol="GC=F" sentiment-label="GOLD" table-title="Größte Positionen" :chart-points="marketStore.chartData.gold" :table-rows="marketStore.panelTables.gold" :long-pct="goldPosition?.longPct ?? 50" :short-pct="goldPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.gold" :table-loading="marketStore.panelTablesLoading.gold" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('gold')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('gold')?.shortValue" :long-eur="goldPosition?.longEur" :short-eur="goldPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('gold')?.topPositions" /></div>
-                <div class="min-w-0"><CategoryPanel category="silver" title="SILVER" symbol="SI=F" sentiment-label="SILVER" table-title="Größte Positionen" :chart-points="marketStore.chartData.silver" :table-rows="marketStore.panelTables.silver" :long-pct="silverPosition?.longPct ?? 50" :short-pct="silverPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.silver" :table-loading="marketStore.panelTablesLoading.silver" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('silver')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('silver')?.shortValue" :long-eur="silverPosition?.longEur" :short-eur="silverPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('silver')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="silver" title="SILBER" symbol="SI=F" sentiment-label="SILB" table-title="Größte Positionen" :chart-points="marketStore.chartData.silver" :table-rows="marketStore.panelTables.silver" :long-pct="silverPosition?.longPct ?? 50" :short-pct="silverPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.silver" :table-loading="marketStore.panelTablesLoading.silver" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('silver')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('silver')?.shortValue" :long-eur="silverPosition?.longEur" :short-eur="silverPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('silver')?.topPositions" /></div>
                 <div class="min-w-0"><CategoryPanel category="crypto" title="BTC" symbol="BTC/USD" sentiment-label="BTC" table-title="Größte Positionen" :chart-points="marketStore.chartData.crypto" :table-rows="marketStore.panelTables.crypto" :long-pct="cryptoPosition?.longPct ?? 50" :short-pct="cryptoPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.crypto" :table-loading="marketStore.panelTablesLoading.crypto" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('crypto')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('crypto')?.shortValue" :long-eur="cryptoPosition?.longEur" :short-eur="cryptoPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('crypto')?.topPositions" /></div>
-                <div class="min-w-0"><CategoryPanel category="platinum" title="PLATINUM" symbol="PL=F" sentiment-label="PLATINUM" table-title="Größte Positionen" :chart-points="marketStore.chartData.platinum" :table-rows="marketStore.panelTables.platinum" :long-pct="platinumPosition?.longPct ?? 50" :short-pct="platinumPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.platinum" :table-loading="marketStore.panelTablesLoading.platinum" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('platinum')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('platinum')?.shortValue" :long-eur="platinumPosition?.longEur" :short-eur="platinumPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('platinum')?.topPositions" /></div>
+                <div class="min-w-0"><CategoryPanel category="platinum" title="PLATIN" symbol="PL=F" sentiment-label="PLATIN" table-title="Größte Positionen" :chart-points="marketStore.chartData.platinum" :table-rows="marketStore.panelTables.platinum" :long-pct="platinumPosition?.longPct ?? 50" :short-pct="platinumPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.platinum" :table-loading="marketStore.panelTablesLoading.platinum" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('platinum')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('platinum')?.shortValue" :long-eur="platinumPosition?.longEur" :short-eur="platinumPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('platinum')?.topPositions" /></div>
                 <div class="min-w-0"><CategoryPanel category="eth" title="ETH" symbol="ETH/USD" sentiment-label="ETH" table-title="Größte Positionen" :chart-points="marketStore.chartData.eth" :table-rows="marketStore.panelTables.eth" :long-pct="ethPosition?.longPct ?? 50" :short-pct="ethPosition?.shortPct ?? 50" :chart-loading="marketStore.chartLoading.eth" :table-loading="marketStore.panelTablesLoading.eth" :gauge-loading="positionsStore.loading" :live-long-value="glattLibStore.categoryAggregates.get('eth')?.longValue" :live-short-value="glattLibStore.categoryAggregates.get('eth')?.shortValue" :long-eur="ethPosition?.longEur" :short-eur="ethPosition?.shortEur" :live-top-positions="glattLibStore.categoryAggregates.get('eth')?.topPositions" /></div>
               </div>
             </div>
@@ -220,108 +220,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Positions Overview: Titel + Nav (Pfeile + Dots) in einer Zeile -->
-      <section>
-        <div class="flex items-center gap-3 mb-1">
-          <h2 class="text-[9px] sm:text-xs font-mono font-bold tracking-[0.2em] text-text-secondary uppercase">
-            Positions Overview
-          </h2>
-          <div class="flex-1 h-px bg-border" />
-          <div class="flex items-center gap-3">
-            <button
-              type="button"
-              class="p-1 text-text-secondary hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none transition-colors"
-              aria-label="Vorherige Positionen"
-              :disabled="positionsPage === 0"
-              @click="positionsPage = Math.max(0, positionsPage - 1)"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div class="flex gap-2">
-              <button
-                v-for="p in 2"
-                :key="'pos-' + p"
-                type="button"
-                class="w-2 h-2 rounded-full transition-colors duration-200"
-                :class="positionsPage === p - 1 ? 'bg-text-primary' : 'bg-border hover:bg-text-secondary'"
-                :aria-label="`Positionen ${(p - 1) * 3 + 1}–${(p - 1) * 3 + 3}`"
-                @click="positionsPage = p - 1"
-              />
-            </div>
-            <button
-              type="button"
-              class="p-1 text-text-secondary hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none transition-colors"
-              aria-label="Nächste Positionen"
-              :disabled="positionsPage === 1"
-              @click="positionsPage = Math.min(1, positionsPage + 1)"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="w-full mt-4">
-          <div class="overflow-hidden">
-            <div
-              class="flex transition-transform duration-300 ease-out"
-              :style="{ width: '200%', transform: `translateX(-${positionsPage * 50}%)` }"
-            >
-              <!-- Seite 1: gleiche Breite/Padding wie 6 Karten (pr-2, px-1, pl-2) -->
-              <div class="flex-[0_0_50%] min-w-0 shrink-0 flex">
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pr-2">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(0, 1)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 px-1">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(1, 2)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pl-2">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(2, 3)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-              </div>
-              <!-- Seite 2 -->
-              <div class="flex-[0_0_50%] min-w-0 shrink-0 flex">
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pr-2">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(3, 4)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 px-1">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(4, 5)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-                <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pl-2">
-                  <PositionsSummary
-                    :aggregates="positionsStore.aggregates.slice(5, 6)"
-                    :loading="positionsStore.loading"
-                    no-margin
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- Recent Trades: Titel + Nav (Pfeile + Dots) in einer Zeile -->
       <section>
@@ -386,7 +284,7 @@
                 <div class="flex-[0_0_33.333%] min-w-0 shrink-0 px-1">
                   <RecentTradesList
                     category="silver"
-                    title="SILVER TRADES"
+                    title="SILBER TRADES"
                     :trades="tradesStore.trades.silver"
                     :loading="tradesStore.loading.silver"
                     :error="tradesStore.error.silver"
@@ -407,7 +305,7 @@
                 <div class="flex-[0_0_33.333%] min-w-0 shrink-0 pr-2">
                   <RecentTradesList
                     category="platinum"
-                    title="PLATINUM TRADES"
+                    title="PLATIN TRADES"
                     :trades="tradesStore.trades.platinum"
                     :loading="tradesStore.loading.platinum"
                     :error="tradesStore.error.platinum"
@@ -470,7 +368,6 @@ import { useGlattLibStore } from '@/stores/glattlib.store'
 import HeaderBar from '@/components/HeaderBar.vue'
 import CategoryPanel from '@/components/CategoryPanel.vue'
 import CommodityAssetCard from '@/components/CommodityAssetCard.vue'
-import PositionsSummary from '@/components/PositionsSummary.vue'
 import RecentTradesList from '@/components/RecentTradesList.vue'
 import GlattPositionCard from '@/components/GlattPositionCard.vue'
 import { COMMODITY_INFOS } from '@/mocks/mock.commodities'
@@ -510,7 +407,6 @@ function updateSlotFilter(index: number, filter: CommodityCardFilter) {
     i === index ? filter : f
   )
 }
-const positionsPage = ref(0)
 const tradesPage = ref(0)
 
 const goldPosition = computed(() =>

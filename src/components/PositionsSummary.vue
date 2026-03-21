@@ -73,9 +73,9 @@ defineProps<{
 
 const CATEGORY_LABELS: Record<string, string> = {
   gold:     'GOLD POSITIONS',
-  silver:   'SILVER POSITIONS',
+  silver:   'SILB POSITIONS',
   crypto:   'BITCOIN POSITIONS',
-  platinum: 'PLATINUM POSITIONS',
+  platinum: 'PLATIN POSITIONS',
   eth:      'ETH POSITIONS',
   oil:      'OIL POSITIONS',
 }

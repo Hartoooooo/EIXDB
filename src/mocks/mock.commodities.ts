@@ -36,10 +36,10 @@ export function getCommodityChartData(commodityId: CommodityId): ChartPoint[] {
 /** Kategorisierte Rohstoffe aus der DB (Mock) */
 export const COMMODITY_INFOS: CommodityInfo[] = [
   { id: 'gold', name: 'Gold', symbol: 'GC=F', accentColor: '#F5C542' },
-  { id: 'silver', name: 'Silber', symbol: 'SI=F', accentColor: '#C0C0C0' },
+  { id: 'silver', name: 'Silber', shortName: 'Silb', symbol: 'SI=F', accentColor: '#C0C0C0' },
   { id: 'platinum', name: 'Platin', symbol: 'PL=F', accentColor: '#E5E4E2' },
   { id: 'oil', name: 'Öl', symbol: 'CL=F', accentColor: '#8B4513' },
-  { id: 'copper', name: 'Kupfer', symbol: 'HG=F', accentColor: '#B87333' },
+  { id: 'copper', name: 'Kupfer', shortName: 'Kupf', symbol: 'HG=F', accentColor: '#B87333' },
   { id: 'gas', name: 'Gas', symbol: 'NG=F', accentColor: '#4A90A4' },
 ]
 

@@ -73,8 +73,9 @@
       </svg>
     </div>
 
-    <!-- Legend: G Gesamt, L, S mit Exposure (€) -->
+    <!-- Legend: G Gesamt, L, S mit Exposure (€) – ausblendbar wenn im Karten-Header -->
     <div
+      v-if="!hideLegend"
       class="flex items-center font-mono flex-wrap justify-center"
       :class="compact ? 'gap-1.5 text-[9px]' : 'gap-4 text-xs'"
     >
@@ -115,10 +116,13 @@ const props = withDefaults(defineProps<{
   totalValue?: number
   loading?: boolean
   compact?: boolean
+  /** Legende (G/L/S) ausblenden – z.B. wenn im Karten-Header angezeigt */
+  hideLegend?: boolean
 }>(), {
   label: 'SENTIMENT',
   loading: false,
   compact: false,
+  hideLegend: false,
 })
 
 const longDisplay = computed(() => {
