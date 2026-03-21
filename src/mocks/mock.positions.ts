@@ -69,5 +69,4 @@ export const mockPositionsByFilter: Record<string, PositionAggregate[]> = {
   'MUN|HAM': positionsMunHAM,
 }
 
-// Fallback für Legacy-Importe
 export const mockPositions = positionsAllEIX

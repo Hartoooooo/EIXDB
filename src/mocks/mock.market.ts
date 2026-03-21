@@ -1,5 +1,6 @@
 import type { MarketTicker, ChartPoint, PanelTableRow } from '@/types/dto'
 import type { AssetCategory } from '@/types/dto'
+import { formatCurrencyEUR } from '@/utils/format'
 
 export const mockTickers: MarketTicker[] = [
   { symbol: 'GC=F',  displayName: 'GC=F',  price: 2845.65, changePct:  0.09, time: new Date().toISOString() },
@@ -41,41 +42,51 @@ export const mockChartData: Record<AssetCategory, ChartPoint[]> = {
   oil:      generateChartPoints(74.20,    0.003),
 }
 
+/** Position mit Gesamt- sowie Buy- und Sell-Exposure (in €) */
+function pos(label: string, total: number, buy: number, sell: number): PanelTableRow {
+  return {
+    label,
+    totalExposure: formatCurrencyEUR(total),
+    buyExposure: formatCurrencyEUR(buy),
+    sellExposure: formatCurrencyEUR(sell),
+  }
+}
+
 export const mockPanelTables: Record<AssetCategory, PanelTableRow[]> = {
   gold: [
-    { label: 'GLD ETF',    vol: '2.4M',  chgPct:  0.38 },
-    { label: 'GOLD_MINING',vol: '980K',  chgPct:  2.15 },
-    { label: 'IAU ETF',    vol: '1.1M',  chgPct:  0.21 },
-    { label: 'NEM',        vol: '540K',  chgPct: -0.44 },
+    pos('GLD ETF', 125000, 125000, 0),
+    pos('GOLD_MINING', 98000, 0, 98000),
+    pos('IAU ETF', 71000, 71000, 0),
+    pos('NEM', 54000, 54000, 0),
   ],
   silver: [
-    { label: 'SLV ETF',    vol: '3.1M',  chgPct: -0.31 },
-    { label: 'PSLV',       vol: '870K',  chgPct:  0.07 },
-    { label: 'CPER',       vol: '220K',  chgPct: -0.88 },
-    { label: 'SILJ',       vol: '450K',  chgPct:  0.55 },
+    pos('SLV ETF', 142000, 0, 142000),
+    pos('PSLV', 87000, 87000, 0),
+    pos('CPER', 22000, 22000, 0),
+    pos('SILJ', 45000, 0, 45000),
   ],
   crypto: [
-    { label: 'BTC-USD',   vol: '22.1B', chgPct:  2.08 },
-    { label: 'BTC/EUR',   vol: '8.4B',  chgPct:  1.95 },
-    { label: 'BTC-PERP',  vol: '12.3B', chgPct:  2.12 },
-    { label: 'CBRT',      vol: '1.2B',  chgPct:  1.88 },
+    pos('BTC-USD', 182000, 182000, 0),
+    pos('BTC/EUR', 84000, 0, 84000),
+    pos('BTC-PERP', 123000, 123000, 0),
+    pos('CBRT', 42000, 42000, 0),
   ],
   platinum: [
-    { label: 'PL=F',      vol: '1.2M',  chgPct: -0.15 },
-    { label: 'PPLT',      vol: '420K', chgPct:  0.22 },
-    { label: 'PTM',       vol: '180K', chgPct: -0.41 },
-    { label: 'SBSW',      vol: '350K', chgPct:  0.08 },
+    pos('PL=F', 98000, 0, 98000),
+    pos('PPLT', 42000, 42000, 0),
+    pos('PTM', 18000, 18000, 0),
+    pos('SBSW', 35000, 0, 35000),
   ],
   eth: [
-    { label: 'ETH/USD',   vol: '18.2B', chgPct:  1.48 },
-    { label: 'ETH/EUR',   vol: '5.1B',  chgPct:  1.35 },
-    { label: 'ETH-PERP',  vol: '9.8B',  chgPct:  1.52 },
-    { label: 'LIDO',      vol: '420M', chgPct:  0.88 },
+    pos('ETH/USD', 165000, 165000, 0),
+    pos('ETH/EUR', 51000, 0, 51000),
+    pos('ETH-PERP', 98000, 98000, 0),
+    pos('LIDO', 42000, 42000, 0),
   ],
   oil: [
-    { label: 'CL=F',      vol: '285K',  chgPct: -0.52 },
-    { label: 'BZ=F',      vol: '142K',  chgPct: -0.38 },
-    { label: 'USO',       vol: '98K',   chgPct: -0.44 },
-    { label: 'XLE',       vol: '45M',   chgPct:  0.12 },
+    pos('CL=F', 88000, 88000, 0),
+    pos('BZ=F', 42000, 0, 42000),
+    pos('USO', 31000, 31000, 0),
+    pos('XLE', 45000, 45000, 0),
   ],
 }

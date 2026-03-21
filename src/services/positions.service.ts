@@ -1,8 +1,13 @@
 /**
- * PositionsService – Interface + Mock-Implementierung.
+ * PositionsService – Interface + Stub.
  *
- * Für die Backend-Integration: getPositionAggregates() durch
- * HTTP-Call gegen /api/positions/aggregates?location=...&subBasket=... ersetzen.
+ * Hinweis: Live-Bestandsdaten kommen über GlattLib (SignalR) via glattlib.store.ts.
+ * Dieser Service ist für REST-basierte Positions-Aggregate vorgesehen, sofern
+ * das Backend diese separat bereitstellt.
+ *
+ * TODO: HTTP-Anbindung implementieren.
+ *   Beispiel:
+ *     getPositionAggregates: () => http.get('/api/positions/aggregates', { params: filter })
  */
 
 import type { PositionAggregate, FilterParams } from '@/types/dto'
@@ -12,15 +17,10 @@ export interface IPositionsService {
   getPositionAggregates(filter: FilterParams): Promise<PositionAggregate[]>
 }
 
-function delay(ms = 400): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 class MockPositionsService implements IPositionsService {
   async getPositionAggregates(filter: FilterParams): Promise<PositionAggregate[]> {
-    await delay(350)
     const key = `${filter.location}|${filter.subBasket}`
-    return [...(mockPositionsByFilter[key] ?? mockPositionsByFilter['ALL|EIX'])]
+    return mockPositionsByFilter[key] ?? []
   }
 }
 

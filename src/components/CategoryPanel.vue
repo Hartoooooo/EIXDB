@@ -47,12 +47,14 @@
       />
     </div>
 
-    <!-- Sentiment Gauge -->
-    <div class="mx-4 mt-2 mb-1 py-3 border-t border-border">
+    <!-- Sentiment Gauge (L/S mit Exposure € statt %) -->
+    <div class="mx-4 mt-2 mb-2 py-3 border-t border-border">
       <SentimentGauge
         :label="sentimentLabel"
-        :longPct="longPct"
-        :shortPct="shortPct"
+        :longPct="effectiveLongPct"
+        :shortPct="effectiveShortPct"
+        :long-value="effectiveLongValue"
+        :short-value="effectiveShortValue"
         :loading="gaugeLoading"
       />
     </div>
@@ -60,8 +62,8 @@
     <!-- Data Table -->
     <div class="mx-4 mb-4 mt-1 pt-3 border-t border-border">
       <DataTableMini
-        :title="tableTitle"
-        :rows="tableRows"
+        :title="effectiveTableTitle"
+        :rows="effectiveTableRows"
         :loading="tableLoading"
       />
     </div>
@@ -71,7 +73,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { ChartPoint, PanelTableRow } from '@/types/dto'
-import { formatPrice } from '@/utils/format'
+import type { GlattPositionData } from '@/types/glattlib'
+import { formatPrice, formatCurrencyEUR } from '@/utils/format'
 import { CATEGORY_ACCENT } from '@/utils/color'
 import MiniLineChart from './MiniLineChart.vue'
 import SentimentGauge from './SentimentGauge.vue'
@@ -92,12 +95,35 @@ const props = withDefaults(defineProps<{
   tableLoading?: boolean
   gaugeLoading?: boolean
   chartHeight?: number
+  /** Live Long-Value aus GlattLib (€) – wenn gesetzt, überschreibt longPct/shortPct für die Gauge */
+  liveLongValue?: number
+  /** Live Short-Value aus GlattLib (€) */
+  liveShortValue?: number
+  /** Long Exposure aus Positions-Aggregat (€) – Fallback wenn keine Live-Daten */
+  longEur?: number
+  /** Short Exposure aus Positions-Aggregat (€) – Fallback wenn keine Live-Daten */
+  shortEur?: number
+  /** Top-5-Positionen nach |Value| aus GlattLib – ersetzt die statischen tableRows */
+  liveTopPositions?: GlattPositionData[]
 }>(), {
   chartLoading: false,
   tableLoading: false,
   gaugeLoading: false,
-  chartHeight: 220,
+  chartHeight: 120,
+  liveLongValue: undefined,
+  liveShortValue: undefined,
+  longEur: undefined,
+  shortEur: undefined,
+  liveTopPositions: undefined,
 })
+
+/** Exposure-Werte für L/S in der Gauge: Live-Daten bevorzugt, sonst Aggregat */
+const effectiveLongValue = computed(() =>
+  props.liveLongValue ?? props.longEur ?? 0
+)
+const effectiveShortValue = computed(() =>
+  props.liveShortValue ?? props.shortEur ?? 0
+)
 
 const accentColor = computed(() => CATEGORY_ACCENT[props.category])
 
@@ -113,4 +139,40 @@ const formattedPrice = computed(() => {
   const val = props.chartPoints[props.chartPoints.length - 1].value
   return formatPrice(val, val < 10 ? 4 : 2)
 })
+
+/** true wenn Live-Daten aus GlattLib vorhanden sind */
+const hasLiveData = computed(() =>
+  props.liveLongValue !== undefined || props.liveShortValue !== undefined
+)
+
+/** Gauge-Prozente: aus Live-EUR-Werten berechnen, falls vorhanden */
+const effectiveLongPct = computed(() => {
+  if (!hasLiveData.value) return props.longPct
+  const total = (props.liveLongValue ?? 0) + (props.liveShortValue ?? 0)
+  if (total === 0) return 50
+  return Math.round(((props.liveLongValue ?? 0) / total) * 100)
+})
+
+const effectiveShortPct = computed(() => 100 - effectiveLongPct.value)
+
+/** Tabellen-Rows: Live-Top-Positionen haben Vorrang vor statischen Mock-Rows */
+const effectiveTableRows = computed<PanelTableRow[]>(() => {
+  if (props.liveTopPositions && props.liveTopPositions.length > 0) {
+    return props.liveTopPositions.map(p => {
+      const val = p.value ?? 0
+      const total = Math.abs(val)
+      const buy = p.size > 0 ? val : 0
+      const sell = p.size < 0 ? total : 0
+      return {
+        label: p.isin,
+        totalExposure: formatCurrencyEUR(total),
+        buyExposure: formatCurrencyEUR(buy),
+        sellExposure: formatCurrencyEUR(sell),
+      }
+    })
+  }
+  return props.tableRows
+})
+
+const effectiveTableTitle = computed(() => props.tableTitle)
 </script>

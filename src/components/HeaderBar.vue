@@ -36,26 +36,26 @@
       </div>
     </div>
 
-    <!-- Center: Total Exposure (absolut zentriert, aktualisiert sich mit Refresh) -->
+    <!-- Center: Live Portfolio-Exposure aus GlattLib (absolut zentriert) -->
     <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-2">
       <div
         class="flex items-center gap-1 px-3 py-1.5 rounded-md bg-surface2 border border-border transition-opacity duration-200"
-        :class="{ 'opacity-70': refreshing }"
+        :class="{ 'opacity-40': !glattLibStore.isServerRunning }"
       >
-        <template v-if="refreshing">
-          <span class="font-mono text-xs text-text-secondary">Aktualisiere…</span>
+        <template v-if="glattLibStore.connectionStatus === 'connecting'">
+          <span class="font-mono text-xs text-text-secondary">Verbinde…</span>
         </template>
         <template v-else>
           <span class="font-mono text-xs font-semibold text-text-primary tabular-nums">
-            G {{ formatCurrencyEUR(totalLong + totalShort) }}
+            G {{ formatCurrencyEUR(glattLibStore.totalPortfolioValue) }}
           </span>
           <span class="text-border mx-1">|</span>
           <span class="font-mono text-xs font-semibold text-positive tabular-nums">
-            L {{ formatCurrencyEUR(totalLong) }}
+            L {{ formatCurrencyEUR(glattLibStore.totalLongValue) }}
           </span>
           <span class="text-border mx-1">|</span>
           <span class="font-mono text-xs font-semibold text-negative tabular-nums">
-            S {{ formatCurrencyEUR(totalShort) }}
+            S {{ formatCurrencyEUR(glattLibStore.totalShortValue) }}
           </span>
         </template>
       </div>
@@ -115,9 +115,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePositionsStore } from '@/stores/positions.store'
+import { useGlattLibStore } from '@/stores/glattlib.store'
 import { useThemeStore } from '@/stores/theme.store'
 import { formatCurrencyEUR } from '@/utils/format'
 import type { FilterParams, LocationFilter, SubBasketFilter } from '@/types/dto'
@@ -144,14 +144,5 @@ function emitFilter() {
 watch(selectedLocation, emitFilter)
 watch(selectedSubBasket, emitFilter)
 
-const positionsStore = usePositionsStore()
-const { aggregates } = storeToRefs(positionsStore)
-
-const totalLong = computed(() =>
-  aggregates.value.reduce((sum, a) => sum + a.longEur, 0)
-)
-
-const totalShort = computed(() =>
-  aggregates.value.reduce((sum, a) => sum + a.shortEur, 0)
-)
+const glattLibStore = useGlattLibStore()
 </script>

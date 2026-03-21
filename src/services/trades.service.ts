@@ -1,35 +1,36 @@
 /**
- * TradesService – Interface + Mock-Implementierung.
+ * TradesService – Interface + Stub.
  *
- * Für die Backend-Integration: getRecentTrades() durch
- * HTTP-Call gegen /api/trades?category=...&limit=...&location=...&subBasket=... ersetzen.
+ * TODO: HTTP-Anbindung implementieren.
+ *   Beispiel:
+ *     getRecentTrades: () => http.get('/api/trades', { params: { category, limit, ...filter } })
  */
 
-import type { Trade, FilterParams } from '@/types/dto'
-import type { AssetCategory } from '@/types/dto'
+import type { Trade, FilterParams, AssetCategory } from '@/types/dto'
 import { mockTrades } from '@/mocks/mock.trades'
 
 export interface ITradesService {
   getRecentTrades(category: AssetCategory, filter: FilterParams, limit?: number): Promise<Trade[]>
 }
 
-function delay(ms = 400): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
+function matchesFilter(t: Trade, filter: FilterParams): boolean {
+  if (t.subBasket !== filter.subBasket) return false
+  if (filter.location === 'ALL') return true
+  if (filter.location === 'BER') return t.basket === 'B'
+  if (filter.location === 'MUN') return t.basket === 'M'
+  return true
 }
 
 class MockTradesService implements ITradesService {
-  async getRecentTrades(category: AssetCategory, filter: FilterParams, limit = 5): Promise<Trade[]> {
-    await delay(300)
-    return mockTrades
-      .filter(t => {
-        if (t.category !== category) return false
-        if (filter.location === 'BER' && t.basket !== 'B') return false
-        if (filter.location === 'MUN' && t.basket !== 'M') return false
-        if (t.subBasket !== filter.subBasket) return false
-        return true
-      })
+  async getRecentTrades(
+    category: AssetCategory,
+    filter: FilterParams,
+    limit = 5,
+  ): Promise<Trade[]> {
+    const filtered = mockTrades
+      .filter(t => t.category === category && matchesFilter(t, filter))
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, limit)
+    return filtered.slice(0, limit)
   }
 }
 

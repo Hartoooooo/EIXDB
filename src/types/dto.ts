@@ -53,6 +53,7 @@ export interface Trade {
 
 export interface PanelTableRow {
   label: string
-  vol: string
-  chgPct?: number
+  totalExposure: string
+  buyExposure: string
+  sellExposure: string
 }
